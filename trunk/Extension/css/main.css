@@ -24,9 +24,13 @@ label {
 	width: 70px;
 }
 
-form#address,
+form#address {
+
+}
+
 form#geodata {
-	border-bottom: 1px solid #CCCCCC;
+	display: none;
+	border-top: 1px solid #CCCCCC;
 }
 
 form#address input[type=text],
@@ -48,13 +52,18 @@ a:hover {
 }
 
 #map {
-	display: none;
-	margin-top: 10px;
 	width: 300px;
 	height: 300px;
 }
 
 #error {
-	margin-top: 10px;
-	display: none;
+	border-top: 1px solid #CCCCCC;
+	padding-top: 10px;
 }
+
+#map,
+#error {
+	display: none;
+	clear: both;
+}
+
