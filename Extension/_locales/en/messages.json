@@ -1,0 +1,70 @@
+{
+	"extension_name": {
+		"message": "Geocoding",
+		"description": "The name of the extension"
+	},
+	"extension_description": {
+		"message": "This Chrome extension extension finds the latitude / longitude to a given address.",
+		"description": "The description of the extension"
+	},
+	"extension_default_title": {
+		"message": "Geocoding",
+		"description": "The default title of the extension"
+	},
+	"headline": {
+		"message": "Geocoding",
+		"description": "The first headline of the extension"
+	},
+	"street": {
+		"message": "Street",
+		"description": ""
+	},
+	"zip": {
+		"message": "Zip code",
+		"description": ""
+	},
+	"city": {
+		"message": "City",
+		"description": ""
+	},
+	"geocoding": {
+		"message": "Geocoding",
+		"description": ""
+	},
+	"latitude": {
+		"message": "Latitude",
+		"description": ""
+	},
+	"longitude": {
+		"message": "Longitude",
+		"description": ""
+	},
+	"no_results": {
+		"message": "Geocoding was successful but returned no results. This may occur if a non-existent address was passed.",
+		"description": ""
+	},
+	"over_quota": {
+		"message": "You are over your quota of possibility geocodings.",
+		"description": ""
+	},
+	"view_larger_map": {
+		"message": "View Larger Map",
+		"description": ""
+	},
+	"options": {
+		"message": "Options",
+		"description": "Headline 2 of the options page"
+	},
+	"new_tab": {
+		"message": "new tab",
+		"description": "new tab"
+	},
+	"active_tab": {
+		"message": "active tab",
+		"description": "active tab"
+	},
+	"new_window": {
+		"message": "new window",
+		"description": "new window"
+	}
+}

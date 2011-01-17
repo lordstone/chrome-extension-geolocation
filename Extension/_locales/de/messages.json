@@ -1,0 +1,70 @@
+{
+	"extension_name": {
+		"message": "Geocoding",
+		"description": "The name of the extension"
+	},
+	"extension_description": {
+		"message": "This Chrome extension extension finds the latitude / longitude to a given address.",
+		"description": "The description of the extension"
+	},
+	"extension_default_title": {
+		"message": "Geocoding",
+		"description": "The default title of the extension"
+	},
+	"headline": {
+		"message": "Geocoding",
+		"description": "The first headline of the extension"
+	},
+	"street": {
+		"message": "Straße",
+		"description": ""
+	},
+	"zip": {
+		"message": "PLZ",
+		"description": ""
+	},
+	"city": {
+		"message": "Ort",
+		"description": ""
+	},
+	"geocoding": {
+		"message": "Geocoding",
+		"description": ""
+	},
+	"latitude": {
+		"message": "Latitude",
+		"description": ""
+	},
+	"longitude": {
+		"message": "Longitude",
+		"description": ""
+	},
+	"no_results": {
+		"message": "Für die von Ihnen angegebene Adresse konnten keine Geodaten ermittelt werden.",
+		"description": ""
+	},
+	"over_quota": {
+		"message": "Sie haben die maximale Anzahl von Geocodings erreicht. Bitte versuchen Sie es in 24 Stunden erneut.",
+		"description": ""
+	},
+	"view_larger_map": {
+		"message": "Größere Kartenansicht",
+		"description": ""
+	},
+	"options": {
+		"message": "Optionen",
+		"description": "Headline 2 of the options page"
+	},
+	"new_tab": {
+		"message": "neuer Tab",
+		"description": "new tab"
+	},
+	"active_tab": {
+		"message": "aktiver Tab",
+		"description": "active tab"
+	},
+	"new_window": {
+		"message": "neues Fenster",
+		"description": "new window"
+	}
+}

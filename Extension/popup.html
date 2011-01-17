@@ -5,12 +5,23 @@
 		<script>
 			init = function() {
 				document.getElementById('headline').innerText = chrome.i18n.getMessage('headline');
-				document.getElementById('street').focus();
+				document.getElementById('label_street').innerText = chrome.i18n.getMessage('street') + ':';
+				document.getElementById('street').placeholder = chrome.i18n.getMessage('street');
+				document.getElementById('label_zip').innerText = chrome.i18n.getMessage('zip') + ':';
+				document.getElementById('zip').placeholder = chrome.i18n.getMessage('zip');
+				document.getElementById('label_city').innerText = chrome.i18n.getMessage('city') + ':';
+				document.getElementById('city').placeholder = chrome.i18n.getMessage('city');
+				document.getElementById('button_geocoding').value = chrome.i18n.getMessage('geocoding');
+				document.getElementById('label_latitude').innerText = chrome.i18n.getMessage('latitude') + ':';
+				document.getElementById('label_longitude').innerText = chrome.i18n.getMessage('longitude') + ':';
+
+				//document.getElementById('street').focus();
 				delete init;
 			}
 
 			openLink = function(url) {
 				switch (window.localStorage.getItem('link_target')) {
+					case null:
 					case undefined:
 					case 'new_tab':
 						chrome.tabs.create({'url': url});
@@ -55,7 +66,11 @@
 								break;
 							case 'ZERO_RESULTS':
 								document.getElementById('geodata').style.display = 'none';
-								document.getElementById('error').innerText = 'Fuer die von Ihnen angegebene Adresse konnten keine Geodaten ermittelt werden.';
+								document.getElementById('error').innerText = chrome.i18n.getMessage('no_results');
+								break;
+							case 'OVER_QUERY_LIMIT':
+								document.getElementById('geodata').style.display = 'none';
+								document.getElementById('error').innerText = chrome.i18n.getMessage('over_quota');
 								break;
 							default:
 								document.getElementById('error').innerText = response.status;
@@ -74,6 +89,8 @@
 				if (latitude != '' && longitude != '') {
 					document.getElementById('error').style.display = 'none';
 					document.getElementById('map').style.display = 'block';
+					document.getElementById('view_larger_map').style.display = 'block';
+					document.getElementById('view_larger_map').innerHTML = '<a href="javascript:openLink(\'http://maps.google.de/maps?q='+String(encodeURIComponent(document.getElementById('street').value))+',+'+String(encodeURIComponent(document.getElementById('zip').value))+'+'+String(encodeURIComponent(document.getElementById('city').value))+'\')">'+chrome.i18n.getMessage('view_larger_map')+'</a>';
 
 					var myLatlng = new google.maps.LatLng(latitude, longitude);
 					var myOptions = {
@@ -98,6 +115,8 @@
 				} else {
 					document.getElementById('error').style.display = 'block';
 					document.getElementById('map').style.display = 'none';
+					document.getElementById('view_larger_map').style.display = 'none';
+					document.getElementById('view_larger_map').innerHTML = '';
 				}
 			}
 		</script>
@@ -106,33 +125,34 @@
 		<h1 id="headline"></h1>
 		<form id="address" onsubmit="geocoding(); return false;">
 			<p>
-				<label for="street">Street:</label>
-				<input type="text" id="street" value="Ernst-Reuter-Platz 8"/>
+				<label for="street" id="label_street"></label>
+				<input type="text" id="street"/>
 			</p>
 			<p>
-				<label for="zip">ZIP code:</label>
-				<input type="text" id="zip" value="10587"/>
+				<label for="zip" id="label_zip"></label>
+				<input type="text" id="zip"/>
 			</p>
 			<p>
-				<label for="city">City:</label>
-				<input type="text" id="city" value="Berlin"/>
+				<label for="city" id="label_city"></label>
+				<input type="text" id="city"/>
 			</p>
 			<p>
 				<label>&nbsp;</label>
-				<input type="submit" value="Geocoding"/>
+				<input type="submit" id="button_geocoding"/>
 			</p>
 		</form>
 		<form id="geodata">
 			<p>
-				<label for="street">Latitude:</label>
+				<label for="street" id="label_latitude"></label>
 				<input type="text" id="latitude" readonly="readonly"/>
 			</p>
 			<p>
-				<label for="zip">Longitude:</label>
+				<label for="zip" id="label_longitude"></label>
 				<input type="text" id="longitude" readonly="readonly"/>
 			</p>
 		</form>
-		<div id="map">Größere Kartenansicht</div>
+		<div id="map"></div>
+		<div id="view_larger_map"></div>
 		<div id="error"></div>
 	</body>
 </html>
