@@ -1,4 +1,5 @@
 #summary What has changed between releases.
+#labels Featured
 
 If you have a feature request or found a bug, please [http://code.google.com/p/chrome-extension-geolocation/issues/list submit an issue].
 
