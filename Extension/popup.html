@@ -73,6 +73,7 @@
 								document.getElementById('error').innerText = chrome.i18n.getMessage('over_quota');
 								break;
 							default:
+								document.getElementById('geodata').style.display = 'none';
 								document.getElementById('error').innerText = response.status;
 								break;
 						}
