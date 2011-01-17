@@ -24,10 +24,6 @@ label {
 	width: 70px;
 }
 
-form#address {
-
-}
-
 form#geodata {
 	display: none;
 	border-top: 1px solid #CCCCCC;
@@ -54,6 +50,10 @@ a:hover {
 #map {
 	width: 300px;
 	height: 300px;
+}
+
+#view_larger_map {
+	margin-top: 5px;
 }
 
 #error {
