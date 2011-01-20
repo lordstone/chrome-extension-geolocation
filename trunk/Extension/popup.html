@@ -22,10 +22,11 @@
 				document.getElementById('copy_longitude').value = chrome.i18n.getMessage('copy');
 				
 				for (var i = 0; i < input_fields.length; i++) {
-					document.getElementById(input_fields[i]).addEventListener('keyup', function() {
+					document.getElementById(input_fields[i]).addEventListener('keyup', function(event) {
 						window.localStorage.setItem('current_'+this.id, this.value);
-						window.localStorage.setItem('address_changed', 1);
-						window.localStorage.setItem('address_geocodet', 0);
+						if (event.keyCode != 13) {
+							window.localStorage.setItem('current_geocoding', 0);
+						}
 					}, false);
 				}
 
@@ -70,14 +71,13 @@
 					document.getElementById(input_fields[i]).value = value;
 				}
 
-				if (window.localStorage.getItem('address_changed') == 0 && window.localStorage.getItem('address_geocodet') == 1) {
+				if (window.localStorage.getItem('current_geocoding') == 1) {
 					geocoding();
 				}
 			}
 
 			geocoding = function() {
-				window.localStorage.setItem('address_changed', 0);
-				window.localStorage.setItem('address_geocodet', 1);
+				window.localStorage.setItem('current_geocoding', 1);
 
 				var street = document.getElementById('street').value;
 				var zip = document.getElementById('zip').value;
@@ -165,7 +165,7 @@
 			}
 		</script>
 	</head>
-	<body onload ="init()">
+	<body onload="init()">
 		<h1 id="headline"></h1>
 		<form id="address" onsubmit="geocoding(); return false;">
 			<p>
