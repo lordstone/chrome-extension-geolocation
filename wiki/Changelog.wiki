@@ -5,6 +5,11 @@ If you have a feature request or found a bug, please [http://code.google.com/p/c
 
 = Versions =
 
+== Version 1.0.0.1 (2011-01-20) ==
+
+  * Provide the possibility to copy the value of latitude & longitude with a "Copy" button (Issue 2)
+  * Save current status on close (Issue 3)
+
 == Version 1.0.0.0 (2011-01-17) ==
 
   * Initial version.
