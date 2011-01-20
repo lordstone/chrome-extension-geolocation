@@ -4,7 +4,7 @@
 		"description": "The name of the extension"
 	},
 	"extension_description": {
-		"message": "Diese Chrome extension ermittelt Latitude und longitude zu einer Adresse und zeigt diese auf einer Karte an.",
+		"message": "Diese Chrome Extension ermittelt Latitude und Longitude zu einer Adresse und zeigt diese auf einer Karte an.",
 		"description": "The description of the extension"
 	},
 	"extension_default_title": {
@@ -37,6 +37,10 @@
 	},
 	"longitude": {
 		"message": "Longitude",
+		"description": ""
+	},
+	"latitude_longitude_width": {
+		"message": "140",
 		"description": ""
 	},
 	"copy": {

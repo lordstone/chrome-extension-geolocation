@@ -3,6 +3,8 @@
 		<link rel="stylesheet" href="/css/main.css"/>
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 		<script>
+			var input_fields = ['street', 'zip', 'city'];
+			
 			init = function() {
 				document.getElementById('headline').innerText = chrome.i18n.getMessage('headline');
 				document.getElementById('label_street').innerText = chrome.i18n.getMessage('street') + ':';
@@ -14,10 +16,21 @@
 				document.getElementById('button_geocoding').value = chrome.i18n.getMessage('geocoding');
 				document.getElementById('label_latitude').innerText = chrome.i18n.getMessage('latitude') + ':';
 				document.getElementById('label_longitude').innerText = chrome.i18n.getMessage('longitude') + ':';
+				document.getElementById('latitude').style.width = String(chrome.i18n.getMessage('latitude_longitude_width')) + 'px';
+				document.getElementById('longitude').style.width = String(chrome.i18n.getMessage('latitude_longitude_width')) + 'px';
 				document.getElementById('copy_latitude').value = chrome.i18n.getMessage('copy');
 				document.getElementById('copy_longitude').value = chrome.i18n.getMessage('copy');
+				
+				for (var i = 0; i < input_fields.length; i++) {
+					document.getElementById(input_fields[i]).addEventListener('keyup', function() {
+						window.localStorage.setItem('current_'+this.id, this.value);
+						window.localStorage.setItem('address_changed', 1);
+						window.localStorage.setItem('address_geocodet', 0);
+					}, false);
+				}
 
-				//document.getElementById('street').focus();
+				restoreLastStatus();
+
 				delete init;
 			}
 
@@ -45,44 +58,66 @@
 				window.close();
 			}
 
+			restoreLastStatus = function() {
+				for (var i = 0; i < input_fields.length; i++) {
+					var value = window.localStorage.getItem('current_'+input_fields[i]);
+					switch (value) {
+						case null:
+						case undefined:
+							value = '';
+							break;
+					}
+					document.getElementById(input_fields[i]).value = value;
+				}
+
+				if (window.localStorage.getItem('address_changed') == 0 && window.localStorage.getItem('address_geocodet') == 1) {
+					geocoding();
+				}
+			}
+
 			geocoding = function() {
-				document.getElementById('latitude').value = '';
-				document.getElementById('longitude').value = '';
+				window.localStorage.setItem('address_changed', 0);
+				window.localStorage.setItem('address_geocodet', 1);
 
 				var street = document.getElementById('street').value;
 				var zip = document.getElementById('zip').value;
 				var city = document.getElementById('city').value;
 
-				var url = 'http://maps.googleapis.com/maps/api/geocode/json?address='+String(encodeURIComponent(street))+',+'+String(encodeURIComponent(zip))+'+'+String(encodeURIComponent(city))+'&sensor=false';
+				if (street != '' || zip != '' || city != '') {
+					document.getElementById('latitude').value = '';
+					document.getElementById('longitude').value = '';
 
-				var xhr = new XMLHttpRequest();
-				xhr.open('GET', url, true);
-				xhr.onreadystatechange = function() {
-					if (xhr.readyState == 4) {
-						var response = JSON.parse(xhr.responseText);
-						switch(response.status) {
-							case 'OK':
-								document.getElementById('geodata').style.display = 'block';
-								document.getElementById('latitude').value = response.results[0].geometry.location.lat;
-								document.getElementById('longitude').value = response.results[0].geometry.location.lng;
-								break;
-							case 'ZERO_RESULTS':
-								document.getElementById('geodata').style.display = 'none';
-								document.getElementById('error').innerText = chrome.i18n.getMessage('no_results');
-								break;
-							case 'OVER_QUERY_LIMIT':
-								document.getElementById('geodata').style.display = 'none';
-								document.getElementById('error').innerText = chrome.i18n.getMessage('over_quota');
-								break;
-							default:
-								document.getElementById('geodata').style.display = 'none';
-								document.getElementById('error').innerText = response.status;
-								break;
+					var url = 'http://maps.googleapis.com/maps/api/geocode/json?address='+String(encodeURIComponent(street))+',+'+String(encodeURIComponent(zip))+'+'+String(encodeURIComponent(city))+'&sensor=false';
+
+					var xhr = new XMLHttpRequest();
+					xhr.open('GET', url, true);
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState == 4) {
+							var response = JSON.parse(xhr.responseText);
+							switch(response.status) {
+								case 'OK':
+									document.getElementById('geodata').style.display = 'block';
+									document.getElementById('latitude').value = response.results[0].geometry.location.lat;
+									document.getElementById('longitude').value = response.results[0].geometry.location.lng;
+									break;
+								case 'ZERO_RESULTS':
+									document.getElementById('geodata').style.display = 'none';
+									document.getElementById('error').innerText = chrome.i18n.getMessage('no_results');
+									break;
+								case 'OVER_QUERY_LIMIT':
+									document.getElementById('geodata').style.display = 'none';
+									document.getElementById('error').innerText = chrome.i18n.getMessage('over_quota');
+									break;
+								default:
+									document.getElementById('geodata').style.display = 'none';
+									document.getElementById('error').innerText = response.status;
+									break;
+							}
+							showOnMap();
 						}
-						showOnMap();
 					}
+					xhr.send();
 				}
-				xhr.send();
 			}
 
 			copyValue = function(id) {

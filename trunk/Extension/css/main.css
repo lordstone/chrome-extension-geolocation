@@ -7,7 +7,11 @@ body {
 	margin: 0;
 	padding: 0;
 }
-	
+
+body#page_options {
+	padding: 10px;
+}
+
 h1 {
 	font-size: 16px;
 	border-bottom: 1px solid #000000;
@@ -37,12 +41,8 @@ form#address input[type=text] {
 	width: 224px;
 }
 
-form#geodata input[type=text] {
-	width: 150px;
-}
-
 form#geodata input[type=button] {
-	width: 70px;
+	float: right;
 }
 
 form p {
