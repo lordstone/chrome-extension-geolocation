@@ -33,9 +33,16 @@ form#geodata {
 	border-top: 1px solid #CCCCCC;
 }
 
-form#address input[type=text],
-form#geodata input[type=text]{
+form#address input[type=text] {
 	width: 224px;
+}
+
+form#geodata input[type=text] {
+	width: 150px;
+}
+
+form#geodata input[type=button] {
+	width: 70px;
 }
 
 form p {

@@ -39,6 +39,10 @@
 		"message": "Longitude",
 		"description": ""
 	},
+	"copy": {
+		"message": "Kopieren",
+		"description": ""
+	},
 	"no_results": {
 		"message": "Für die von Ihnen angegebene Adresse konnten keine Geodaten ermittelt werden.",
 		"description": ""

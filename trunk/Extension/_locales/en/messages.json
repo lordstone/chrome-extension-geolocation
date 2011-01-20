@@ -39,6 +39,10 @@
 		"message": "Longitude",
 		"description": ""
 	},
+	"copy": {
+		"message": "Copy",
+		"description": ""
+	},
 	"no_results": {
 		"message": "Geocoding was successful but returned no results. This may occur if a non-existent address was passed.",
 		"description": ""
