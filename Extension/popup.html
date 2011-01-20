@@ -14,6 +14,8 @@
 				document.getElementById('button_geocoding').value = chrome.i18n.getMessage('geocoding');
 				document.getElementById('label_latitude').innerText = chrome.i18n.getMessage('latitude') + ':';
 				document.getElementById('label_longitude').innerText = chrome.i18n.getMessage('longitude') + ':';
+				document.getElementById('copy_latitude').value = chrome.i18n.getMessage('copy');
+				document.getElementById('copy_longitude').value = chrome.i18n.getMessage('copy');
 
 				//document.getElementById('street').focus();
 				delete init;
@@ -83,6 +85,12 @@
 				xhr.send();
 			}
 
+			copyValue = function(id) {
+				document.getElementById(id).select();
+				document.execCommand('Copy');
+				window.getSelection().removeAllRanges();
+			}
+
 			showOnMap = function() {
 				var latitude = document.getElementById('latitude').value;
 				var longitude = document.getElementById('longitude').value;
@@ -146,10 +154,12 @@
 			<p>
 				<label for="street" id="label_latitude"></label>
 				<input type="text" id="latitude" readonly="readonly"/>
+				<input type="button" id="copy_latitude" onclick="copyValue('latitude');"/>
 			</p>
 			<p>
 				<label for="zip" id="label_longitude"></label>
 				<input type="text" id="longitude" readonly="readonly"/>
+				<input type="button" id="copy_longitude" onclick="copyValue('longitude');"/>
 			</p>
 		</form>
 		<div id="map"></div>
