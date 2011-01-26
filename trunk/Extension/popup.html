@@ -7,7 +7,9 @@
 
 			var marker;
 			var map;
-			
+
+			var defaultLatLng = new google.maps.LatLng(40.979898,-5.625);
+
 			init = function() {
 				document.getElementById('headline').innerText = chrome.i18n.getMessage('headline');
 				document.getElementById('label_street').innerText = chrome.i18n.getMessage('street') + ':';
@@ -37,7 +39,7 @@
 					}, false);
 				}
 
-				showMap();
+				createMap();
 
 				restoreLastStatus();
 
@@ -85,19 +87,38 @@
 				}
 			}
 
+			showError = function(type) {
+				with (document) {
+					getElementById('copy_latitude').setAttribute('disabled', 'disabled');
+					getElementById('copy_longitude').setAttribute('disabled', 'disabled');
+					getElementById('copy_woeid').setAttribute('disabled', 'disabled');
+					getElementById('view_larger_map').style.display = 'none';
+					getElementById('view_larger_map').innerHTML = '';
+					getElementById('error').innerText = chrome.i18n.getMessage(type);
+					getElementById('error').style.backgroundImage = 'url(/images/'+type+'.png)';
+					getElementById('error').style.display = 'block';
+				}
+			}
+
+			clearError = function() {
+				document.getElementById('error').style.display = 'none';
+				document.getElementById('error').innerText = '';
+			}
+
 			geocoding = function() {
 				window.localStorage.setItem('current_geocoding', 1);
 
 				var street = document.getElementById('street').value;
 				var zip = document.getElementById('zip').value;
 				var city = document.getElementById('city').value;
+				var country = document.getElementById('country').value;
 
-				if (street != '' || zip != '' || city != '') {
-					document.getElementById('latitude').value = '';
-					document.getElementById('longitude').value = '';
-					document.getElementById('woeid').value = '';
+				document.getElementById('latitude').value = '';
+				document.getElementById('longitude').value = '';
+				document.getElementById('woeid').value = '';
 
-					var url_google = 'http://maps.googleapis.com/maps/api/geocode/json?address='+String(encodeURIComponent(street))+',+'+String(encodeURIComponent(zip))+'+'+String(encodeURIComponent(city))+'&sensor=false';
+				if (street != '' || zip != '' || city != '' || country != '') {
+					var url_google = 'http://maps.googleapis.com/maps/api/geocode/json?address='+String(encodeURIComponent(street))+',+'+String(encodeURIComponent(zip))+'+'+String(encodeURIComponent(city))+',+'+String(encodeURIComponent(country))+'&sensor=false';
 
 					var xhr_google = new XMLHttpRequest();
 					xhr_google.open('GET', url_google, true);
@@ -106,34 +127,43 @@
 							var response_google = JSON.parse(xhr_google.responseText);
 							switch(response_google.status) {
 								case 'OK':
+									clearError();
+
 									document.getElementById('latitude').value = response_google.results[0].geometry.location.lat;
+									document.getElementById('copy_latitude').removeAttribute('disabled');
 									document.getElementById('longitude').value = response_google.results[0].geometry.location.lng;
+									document.getElementById('copy_longitude').removeAttribute('disabled');
 
 									/* ---------- GET WOEID ---------- */
-										var url_yahoo = 'http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text%3D%22'+String(encodeURIComponent(street))+',%20'+String(encodeURIComponent(zip))+'%20'+String(encodeURIComponent(city))+'%22&format=json';
+										var url_yahoo = 'http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text%3D%22'+String(encodeURIComponent(street))+',%20'+String(encodeURIComponent(zip))+'%20'+String(encodeURIComponent(city))+',%20'+String(encodeURIComponent(country))+'%22&format=json';
 										var xhr_yahoo = new XMLHttpRequest();
 										xhr_yahoo.open('GET', url_yahoo, true);
 										xhr_yahoo.onreadystatechange = function() {
 											if (xhr_yahoo.readyState == 4) {
 												var response_yahoo = JSON.parse(xhr_yahoo.responseText);
-												document.getElementById('woeid').value = response_yahoo.query.results.Result.woeid;
+												if (response_yahoo.query.results.Result.woeid != undefined) {
+													document.getElementById('woeid').value = response_yahoo.query.results.Result.woeid;
+													document.getElementById('copy_woeid').removeAttribute('disabled');
+												}
 											}
 										}
 										xhr_yahoo.send();
 									/* ---------- /GET WOEID ---------- */
 
+									document.getElementById('view_larger_map').style.display = 'block';
+									document.getElementById('view_larger_map').innerHTML = '<a href="javascript:openLink(\'http://maps.google.de/maps?q='+String(document.getElementById('latitude').value)+'+'+String(document.getElementById('longitude').value)+'\')">'+chrome.i18n.getMessage('view_larger_map')+'</a>';
+
+									removeMarker();
+									addMarker();
+
 									break;
 								case 'ZERO_RESULTS':
-									document.getElementById('error').innerText = chrome.i18n.getMessage('no_results');
+									showError('no_results');
 									break;
 								case 'OVER_QUERY_LIMIT':
-									document.getElementById('error').innerText = chrome.i18n.getMessage('over_quota');
-									break;
-								default:
-									document.getElementById('error').innerText = response_google.status;
+									showError('over_quota');
 									break;
 							}
-							showOnMap();
 						}
 					}
 					xhr_google.send();
@@ -146,11 +176,10 @@
 				window.getSelection().removeAllRanges();
 			}
 
-			showMap = function() {
-				var myLatlng = new google.maps.LatLng(40.979898,-5.625);
+			createMap = function() {
 				var myOptions = {
 					zoom: 1,
-					center: myLatlng,
+					center: defaultLatLng,
 					streetViewControl: false,
 					mapTypeControl: true,
 					mapTypeControlOptions: {
@@ -167,9 +196,8 @@
 
 			resetMap = function() {
 				removeMarker();
-				var myLatlng = new google.maps.LatLng(40.979898,-5.625);
 				map.setZoom(1);
-				map.setCenter(myLatlng);
+				map.setCenter(defaultLatLng);
 			}
 
 			addMarker = function() {
@@ -194,73 +222,55 @@
 					marker.setMap(null);
 				}
 			}
-
-			showOnMap = function() {
-				var latitude = document.getElementById('latitude').value;
-				var longitude = document.getElementById('longitude').value;
-
-				if (latitude != '' && longitude != '') {
-					document.getElementById('error').style.display = 'none';
-					document.getElementById('view_larger_map').style.display = 'block';
-					document.getElementById('view_larger_map').innerHTML = '<a href="javascript:openLink(\'http://maps.google.de/maps?q='+String(encodeURIComponent(document.getElementById('street').value))+',+'+String(encodeURIComponent(document.getElementById('zip').value))+'+'+String(encodeURIComponent(document.getElementById('city').value))+'\')">'+chrome.i18n.getMessage('view_larger_map')+'</a>';
-					removeMarker();
-					addMarker();
-				} else {
-					resetMap();
-					document.getElementById('error').style.display = 'block';
-					document.getElementById('view_larger_map').style.display = 'none';
-					document.getElementById('view_larger_map').innerHTML = '';
-				}
-			}
 		</script>
 	</head>
 	<body id="page_popup" onload="init()">
 		<h1 id="headline"></h1>
-		<div id="left" style="position: relative; height: 350px;">
-<div style="position: absolute; top: 0; left: 0;">
-			<form id="address" onsubmit="geocoding(); return false;">
-				<p>
-					<label for="street" id="label_street"></label>
-					<input type="text" id="street"/>
-				</p>
-				<p>
-					<label for="zip" id="label_zip"></label>
-					<input type="text" id="zip"/>
-				</p>
-				<p>
-					<label for="city" id="label_city"></label>
-					<input type="text" id="city"/>
-				</p>
-				<p>
-					<label for="country" id="label_country"></label>
-					<select id="country"></select>
-				</p>
-				<p>
-					<label>&nbsp;</label>
-					<input type="submit" id="button_geocoding"/>
-				</p>
-			</form>
-</div>
-<div style="position: absolute; left: 0; bottom: 0px;">
-			<form id="geodata">
-				<p>
-					<label for="latitude" id="label_latitude"></label>
-					<input type="text" id="latitude" readonly="readonly"/>
-					<input type="button" id="copy_latitude" onclick="copyValue('latitude')" disabled="disabled"/>
-				</p>
-				<p>
-					<label for="longitude" id="label_longitude"></label>
-					<input type="text" id="longitude" readonly="readonly"/>
-					<input type="button" id="copy_longitude" onclick="copyValue('longitude')" disabled="disabled"/>
-				</p>
-				<p>
-					<label for="woid" id="label_woeid"></label>
-					<input type="text" id="woeid" readonly="readonly"/>
-					<input type="button" id="copy_woeid" onclick="copyValue('woeid')" disabled="disabled"/>
-				</p>
-			</form>
-</div>			
-			<div id="error"></div>
+		<div id="left">
+			<div id="left_top">
+				<form id="address" onsubmit="geocoding(); return false;">
+					<p>
+						<label for="street" id="label_street"></label>
+						<input type="text" id="street"/>
+					</p>
+					<p>
+						<label for="zip" id="label_zip"></label>
+						<input type="text" id="zip"/>
+					</p>
+					<p>
+						<label for="city" id="label_city"></label>
+						<input type="text" id="city"/>
+					</p>
+					<p>
+						<label for="country" id="label_country"></label>
+						<select id="country"></select>
+					</p>
+					<p>
+						<label>&nbsp;</label>
+						<input type="submit" id="button_geocoding"/>
+					</p>
+				</form>
+				<div id="error"></div>
+			</div>
+			<div id="left_bottom">
+				<form id="geodata">
+					<p>
+						<label for="latitude" id="label_latitude"></label>
+						<input type="text" id="latitude" readonly="readonly"/>
+						<input type="button" id="copy_latitude" onclick="copyValue('latitude')" disabled="disabled"/>
+					</p>
+					<p>
+						<label for="longitude" id="label_longitude"></label>
+						<input type="text" id="longitude" readonly="readonly"/>
+						<input type="button" id="copy_longitude" onclick="copyValue('longitude')" disabled="disabled"/>
+					</p>
+					<p>
+						<label for="woid" id="label_woeid"></label>
+						<input type="text" id="woeid" readonly="readonly"/>
+						<input type="button" id="copy_woeid" onclick="copyValue('woeid')" disabled="disabled"/>
+					</p>
+				</form>
+			</div>
 		</div>
 		<div id="right">
 			<div id="map"></div>
