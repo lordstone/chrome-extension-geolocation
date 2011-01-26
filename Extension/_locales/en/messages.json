@@ -39,7 +39,11 @@
 		"message": "Longitude",
 		"description": ""
 	},
-	"latitude_longitude_width": {
+	"woeid": {
+		"message": "WOEID",
+		"description": ""
+	},
+	"latitude_longitude_woeid_width": {
 		"message": "160",
 		"description": ""
 	},
