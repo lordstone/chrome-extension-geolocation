@@ -1,5 +1,5 @@
 body {
-	min-width: 300px;
+	min-width: 750px;
 	overflow: hidden;
 	font-size: 12px;
 	font-family: Helvetica, Arial, sans-serif;
@@ -32,23 +32,25 @@ label {
 	width: 70px;
 }
 
-form#geodata {
-	display: none;
-	border-top: 1px solid #CCCCCC;
-	padding-top: 10px;
+form p {
+	margin-top: 0;
+	clear: both;
 }
 
 form#address input[type=text] {
 	width: 224px;
 }
 
-form#geodata input[type=button] {
-	float: right;
+form#address select {
+	width: 230px;
 }
 
-form p {
-	margin-top: 0;
-	clear: both;
+form#geodata {
+	width: 300px;
+}
+
+form#geodata input[type=button] {
+	float: right;
 }
 
 a {
@@ -61,8 +63,9 @@ a:hover {
 }
 
 #map {
-	width: 380px;
-	height: 300px;
+	width: 430px;
+	height: 350px;
+	clear: both;
 }
 
 #view_larger_map {
@@ -70,21 +73,22 @@ a:hover {
 }
 
 #error {
+	display: none;
 	border-top: 1px solid #CCCCCC;
 	padding-top: 10px;
-}
-
-#map,
-#error {
-	display: none;
 	clear: both;
 }
 
-#left,
-#right {
+#left {
 	float: left;
+	width: 300px;
 }
 
-#left {
-	margin-right: 20px;
+#right {
+	float: right;
+	width: 430px;
+}
+
+.cb {
+	clear: both;
 }
