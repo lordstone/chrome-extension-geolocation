@@ -27,6 +27,10 @@
 		"message": "City",
 		"description": ""
 	},
+	"country": {
+		"message": "Country",
+		"description": ""
+	},
 	"geocoding": {
 		"message": "Geocoding",
 		"description": ""
