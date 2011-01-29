@@ -1,4 +1,8 @@
 {
+	"language": {
+		"message": "en",
+		"description": ""
+	},
 	"extension_name": {
 		"message": "Geocoding",
 		"description": "The name of the extension"
