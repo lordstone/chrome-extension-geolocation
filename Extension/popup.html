@@ -150,12 +150,14 @@
 				var city = document.getElementById('city').value;
 				var country = document.getElementById('country').options[document.getElementById('country').selectedIndex].text;
 
+				var address = [street, zip, city, country];
+
 				document.getElementById('latitude').value = '';
 				document.getElementById('longitude').value = '';
 				document.getElementById('woeid').value = '';
 
 				if (street != '' || zip != '' || city != '' || country != '') {
-					var url_google = 'http://maps.googleapis.com/maps/api/geocode/json?address='+String(encodeURIComponent(street))+',+'+String(encodeURIComponent(zip))+'+'+String(encodeURIComponent(city))+',+'+String(encodeURIComponent(country))+'&sensor=false';
+					var url_google = 'http://maps.googleapis.com/maps/api/geocode/json?address='+String(encodeURIComponent(address.join(',')))+'&sensor=false';
 
 					var xhr_google = new XMLHttpRequest();
 					xhr_google.open('GET', url_google, true);
@@ -172,7 +174,7 @@
 									document.getElementById('copy_longitude').removeAttribute('disabled');
 
 									/* ---------- GET WOEID ---------- */
-										var url_yahoo = 'http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text%3D%22'+String(encodeURIComponent(street))+',%20'+String(encodeURIComponent(zip))+'%20'+String(encodeURIComponent(city))+',%20'+String(encodeURIComponent(country))+'%22&format=json';
+										var url_yahoo = 'http://query.yahooapis.com/v1/public/yql?q=select%20woeid%20from%20geo.placefinder%20where%20text%3D%22'+String(encodeURIComponent(address.join(',')))+'%22&format=json';
 										var xhr_yahoo = new XMLHttpRequest();
 										xhr_yahoo.open('GET', url_yahoo, true);
 										xhr_yahoo.onreadystatechange = function() {
