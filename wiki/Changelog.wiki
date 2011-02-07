@@ -5,6 +5,12 @@ If you have a feature request or found a bug, please [http://code.google.com/p/c
 
 = Versions =
 
+== Version 1.0.0.2 (2011-02-07) ==
+
+  * New: Possibility to select the country (Issue 4)
+  * New: Find WOEID (Yahoo) to the given address (Issue 7)
+  * Turn off scroll bars on popup resize (Issue 8)
+
 == Version 1.0.0.1 (2011-01-20) ==
 
   * New: Possibility to copy the value of latitude & longitude with a "Copy" button (Issue 2)
