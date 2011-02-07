@@ -8,7 +8,7 @@
 		"description": "The name of the extension"
 	},
 	"extension_description": {
-		"message": "This Chrome extension finds the latitude and longitude to a given address and shows the address on a map.",
+		"message": "This Chrome extension finds the latitude, longitude and WOEID (Where on Earth IDentifier) to a given address and shows the address on a map.",
 		"description": "The description of the extension"
 	},
 	"extension_default_title": {
